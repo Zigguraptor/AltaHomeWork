@@ -39,13 +39,13 @@ public class Program
         }
 
         var booksGroup = app.MapGroup("/books");
-        booksGroup.MapGet("", BookStorageHandler.GetAllBooks);
-        booksGroup.MapGet("/byGuids", BookStorageHandler.GetBooksByGuids);
-        booksGroup.MapGet("/byAuthor", BookStorageHandler.FindBooksByAuthor);
-        booksGroup.MapPost("", BookStorageHandler.AddNewBook);
-        booksGroup.MapPut("", BookStorageHandler.ReplaceBook);
-        booksGroup.MapDelete("", BookStorageHandler.DeleteBook);
-        booksGroup.MapDelete("/dropAll", BookStorageHandler.DropAll);
+        booksGroup.MapGet("", BookStorageHandler.GetAllBooksAsync);
+        booksGroup.MapGet("/byGuids", BookStorageHandler.GetBooksByGuidsAsync);
+        booksGroup.MapGet("/byAuthor", BookStorageHandler.FindBooksByAuthorAsync);
+        booksGroup.MapPost("", BookStorageHandler.AddNewBookAsync);
+        booksGroup.MapPut("", BookStorageHandler.ReplaceBookAsync);
+        booksGroup.MapDelete("", BookStorageHandler.DeleteBookAsync);
+        booksGroup.MapDelete("/dropAll", BookStorageHandler.DropAllAsync);
 
         app.Run();
     }
@@ -130,7 +130,7 @@ public static class BookStorageHandler
     /// <returns>Массив объектов книг</returns>
     /// <response code="200">Успешно отправлен список книг</response>
     [ProducesResponseType(typeof(List<BookInfo>), 200)]
-    public static async ValueTask<IResult> GetAllBooks() =>
+    public static async ValueTask<IResult> GetAllBooksAsync() =>
         TypedResults.Ok(BookDbContext.BookInfos.Select(pair => pair.Value).ToList());
 
     /// <summary>
@@ -142,7 +142,7 @@ public static class BookStorageHandler
     /// <response code="404">Ничего не найдено</response>
     [ProducesResponseType(typeof(List<BookInfo>), 200)]
     [ProducesResponseType(typeof(PartialBooksResponse), 206)]
-    public static async ValueTask<IResult> GetBooksByGuids([FromQuery] Guid[] guids)
+    public static async ValueTask<IResult> GetBooksByGuidsAsync([FromQuery] Guid[] guids)
     {
         var foundBooks = new List<BookInfo>(guids.Length);
         var notFoundGuids = new List<Guid>(guids.Length);
@@ -170,7 +170,7 @@ public static class BookStorageHandler
     /// <returns></returns>
     /// <response code="201">Книга успешно добавлена</response>
     /// <response code="400">Запрос содержит не корректные данные</response>
-    public static async ValueTask<IResult> AddNewBook([FromBody] CreateBookRequestModel createBookRequestModel)
+    public static async ValueTask<IResult> AddNewBookAsync([FromBody] CreateBookRequestModel createBookRequestModel)
     {
         // Валидация моделей должна быть не тут. А через ModelState, но мы в статическом методе, статического класса.
         if (createBookRequestModel is not { Title: not null, Author: not null })
@@ -196,7 +196,7 @@ public static class BookStorageHandler
     /// <param name="bookInfo">Данные книги с GUID по которому нужно заменить данные</param>
     /// <response code="200">Данные заменены</response>
     /// <response code="400">GUID не найден</response>
-    public static async ValueTask<IResult> ReplaceBook([FromBody] BookInfo bookInfo)
+    public static async ValueTask<IResult> ReplaceBookAsync([FromBody] BookInfo bookInfo)
     {
         if (!BookDbContext.BookInfos.ContainsKey(bookInfo.Guid))
             return TypedResults.BadRequest();
@@ -211,7 +211,7 @@ public static class BookStorageHandler
     /// <param name="bookGuid">GUID книги которую нужно удалить</param>
     /// <response code="200">Данные удалены</response>
     /// <response code="400">GUID не найден</response>
-    public static async ValueTask<IResult> DeleteBook(Guid bookGuid) =>
+    public static async ValueTask<IResult> DeleteBookAsync(Guid bookGuid) =>
         BookDbContext.BookInfos.Remove(bookGuid)
             ? TypedResults.Ok()
             : TypedResults.BadRequest();
@@ -223,7 +223,7 @@ public static class BookStorageHandler
     /// <returns>Найденные книги</returns>
     /// <response code="200">Результат поиска</response>
     [ProducesResponseType(typeof(List<BookInfo>), 200)]
-    public static async ValueTask<IResult> FindBooksByAuthor(string author) =>
+    public static async ValueTask<IResult> FindBooksByAuthorAsync(string author) =>
         TypedResults.Ok(BookDbContext.BookInfos
             .Where(pair => pair.Value.Author.Contains(author))
             .Select(pair => pair.Value)
@@ -233,7 +233,7 @@ public static class BookStorageHandler
     ///     Удаляет всё.
     /// </summary>
     /// <response code="200">Всё удалено</response>
-    public static async ValueTask<IResult> DropAll()
+    public static async ValueTask<IResult> DropAllAsync()
     {
         BookDbContext.BookInfos = new Dictionary<Guid, BookInfo>();
         return TypedResults.Ok();
