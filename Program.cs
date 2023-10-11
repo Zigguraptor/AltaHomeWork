@@ -1,12 +1,10 @@
-// ReSharper disable ClassNeverInstantiated.Global
-
 #pragma warning disable CS1591
 
 using Microsoft.OpenApi.Models;
 
 namespace AltaHomeWork_1;
 
-public class Program
+public static class Program
 {
     public static void Main(string[] args)
     {
