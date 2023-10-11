@@ -104,7 +104,7 @@ public class BooksController : ControllerBase
             Guid = Guid.NewGuid(),
             Title = createBookRequestModel.Title,
             Author = createBookRequestModel.Author,
-            PriceRub = createBookRequestModel.PriceRub
+            PriceRub = createBookRequestModel.PriceRub!.Value
         };
 
         BookDbContext.BookInfos.Add(bookInfo.Guid, bookInfo);

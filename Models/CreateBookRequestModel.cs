@@ -14,5 +14,5 @@ public class CreateBookRequestModel
 
     [Required(ErrorMessage = $"{nameof(PriceRub)} не может быть пустым")]
     [Range(0.0, double.PositiveInfinity, ErrorMessage = $"Стоимость должна быть положительным числом")]
-    public decimal PriceRub { get; init; }
+    public decimal? PriceRub { get; init; }
 }
