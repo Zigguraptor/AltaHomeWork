@@ -131,7 +131,7 @@ public class BooksController : ControllerBase
     ///     Удаляет всё.
     /// </summary>
     /// <response code="200">Всё удалено</response>
-    [HttpDelete("all")]
+    [HttpDelete("[action]")]
     public async ValueTask<IActionResult> DropAllAsync()
     {
         BookDbContext.BookInfos = new Dictionary<Guid, BookInfo>();
