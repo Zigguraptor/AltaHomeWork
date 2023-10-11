@@ -1,5 +1,6 @@
 #pragma warning disable CS1591
 
+using AltaHomeWork_1.Middleware;
 using Microsoft.OpenApi.Models;
 
 namespace AltaHomeWork_1;
@@ -28,13 +29,15 @@ public static class Program
 
         var app = builder.Build();
 
-        app.MapControllers();
-
         if (app.Environment.IsDevelopment())
         {
             app.UseSwagger();
             app.UseSwaggerUI(c => { c.SwaggerEndpoint("/swagger/v1/swagger.json", "Visits API v1"); });
         }
+
+        app.UseMiddleware<JsonValidatorMiddleware>();
+
+        app.MapControllers();
 
         app.Run();
     }
