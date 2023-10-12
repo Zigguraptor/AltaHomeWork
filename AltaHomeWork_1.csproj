@@ -17,4 +17,10 @@
     <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="6.5.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Reference Include="MathMatrixKit">
+      <HintPath>ImageProcessing\MathMatrixKitLite.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
 </Project>
