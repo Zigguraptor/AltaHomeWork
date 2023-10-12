@@ -1,6 +1,7 @@
 #pragma warning disable CS1591
 
 using AltaHomeWork_1.Middleware;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.OpenApi.Models;
 
 namespace AltaHomeWork_1;
@@ -28,6 +29,13 @@ public static class Program
         });
 
         var app = builder.Build();
+
+        app.UseStaticFiles();
+        app.UseDirectoryBrowser(new DirectoryBrowserOptions
+        {
+            FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images")),
+            RequestPath = "/images"
+        });
 
         app.UseMiddleware<JsonValidatorMiddleware>();
 
