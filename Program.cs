@@ -30,6 +30,8 @@ public static class Program
 
         var app = builder.Build();
 
+        app.UseMiddleware<RequestTimingMiddleware>();
+        
         app.UseStaticFiles(new StaticFileOptions
         {
             OnPrepareResponse = context =>
