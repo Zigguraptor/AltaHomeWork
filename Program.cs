@@ -30,7 +30,16 @@ public static class Program
 
         var app = builder.Build();
 
-        app.UseStaticFiles();
+        app.UseStaticFiles(new StaticFileOptions
+        {
+            OnPrepareResponse = context =>
+            {
+                context.Context.Response.Headers["Cache-Control"] = "no-cache, no-store, must-revalidate";
+                context.Context.Response.Headers["Pragma"] = "no-cache";
+                context.Context.Response.Headers["Expires"] = "0";
+            }
+        });
+
         app.UseDirectoryBrowser(new DirectoryBrowserOptions
         {
             FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images")),
