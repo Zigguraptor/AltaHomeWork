@@ -31,7 +31,8 @@ public static class Program
         var app = builder.Build();
 
         app.UseMiddleware<RequestTimingMiddleware>();
-        
+        app.UseMiddleware<ImageSplitterMiddleware>();
+
         app.UseStaticFiles(new StaticFileOptions
         {
             OnPrepareResponse = context =>
