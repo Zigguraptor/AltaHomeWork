@@ -19,7 +19,7 @@
 
   <ItemGroup>
     <Reference Include="MathMatrixKit">
-      <HintPath>ImageProcessing\MathMatrixKitLite.dll</HintPath>
+      <HintPath>ImageProcessing\MathMatrixKit.dll</HintPath>
     </Reference>
   </ItemGroup>
 
